@@ -30,6 +30,7 @@ export class ReactjsCloudfrontStack extends cdk.Stack {
       bucketName: props.domainName,
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
       // websiteIndexDocument: "index.html",
       // websiteErrorDocument: "index.html",
     });

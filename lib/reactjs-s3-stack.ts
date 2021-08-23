@@ -22,8 +22,9 @@ export class ReactjsS3Stack extends cdk.Stack {
       bucketName: props.domainName,
       publicReadAccess: true,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
       websiteIndexDocument: "index.html",
-      websiteErrorDocument: "index.html",
+      // websiteErrorDocument: "index.html",
     });
     // const bucket = s3.Bucket.fromBucketName(
     //   this,
@@ -42,7 +43,7 @@ export class ReactjsS3Stack extends cdk.Stack {
 
     const cname = new route53.CnameRecord(this, "cname", {
       zone: zone,
-      recordName: "dart",
+      recordName: props.domainName,
       domainName: bucket.bucketWebsiteDomainName,
     });
 

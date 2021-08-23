@@ -1,0 +1,21 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 12
+    commands:
+      - cd src_frontend
+      - npm install
+  build:
+    commands:
+      - npm run build
+
+artifacts:
+  base-directory: src_frontend/build
+  files:
+    - "**/*"
+
+cache:
+  paths:
+    - "src_frontend/node_modules/**/*"

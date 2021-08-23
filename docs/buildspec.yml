@@ -5,17 +5,17 @@ phases:
     runtime-versions:
       nodejs: 12
     commands:
-      - cd frontend
+      - cd src_frontend
       - npm install
   build:
     commands:
       - npm run build
 
 artifacts:
-  base-directory: frontend/build
+  base-directory: src_frontend/build
   files:
     - "**/*"
 
 cache:
   paths:
-    - "frontend/node_modules/**/*"
+    - "src_frontend/node_modules/**/*"
