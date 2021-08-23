@@ -30,8 +30,8 @@ export class PipelineStack extends cdk.Stack {
       output: sourceArtifact,
       oauthToken: cdk.SecretValue.secretsManager("GITHUB_MARKQJ"),
       owner: "qinjie",
-      repo: "poc-profile-fetcher-ui",
-      branch: "master",
+      repo: "reactjs-fastapi-with-cdk-pipelines",
+      branch: "main",
       // branch: "add-cdk-for-cicd",
     });
 
