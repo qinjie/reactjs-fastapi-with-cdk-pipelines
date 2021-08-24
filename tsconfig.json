@@ -25,6 +25,9 @@
   },
   "exclude": [
     "node_modules",
-    "cdk.out"
+    "cdk.out",
+	"docs",
+	"src_backend",
+	"src_frontend"
   ]
 }
