@@ -16,7 +16,7 @@ export class LambdaApiStack extends cdk.Stack {
   // Update Lambda Function Definition here
   /* TO BE UPDATED - START */
   lambda_src_folder = process.env.BACKEND_PATH!;
-  name: string;
+  moduleName: string;
 
   private getLambdaFunction(
     scope: Construct,
@@ -32,7 +32,7 @@ export class LambdaApiStack extends cdk.Stack {
       environment: env_values,
     };
 
-    const f = new lambda_python.PythonFunction(scope, this.name, props);
+    const f = new lambda_python.PythonFunction(scope, this.moduleName, props);
     return f;
   }
   /* TO BE UPDATED - END */
@@ -55,7 +55,7 @@ export class LambdaApiStack extends cdk.Stack {
     super(scope, id, props);
 
     const env_values = this.loadEnv();
-    this.name = id;
+    this.moduleName = id;
 
     /* Create lambda function */
     this.lambdaFunction = this.getLambdaFunction(this, env_values);
@@ -85,13 +85,22 @@ export class LambdaApiStack extends cdk.Stack {
     });
 
     /* CloudFormation Output */
-    this.outputLambda = new cdk.CfnOutput(this, `${this.name}_FunctionName`, {
-      value: this.lambdaFunction.functionName,
-    });
+    this.outputLambda = new cdk.CfnOutput(
+      this,
+      `${this.moduleName}FunctionOutput`,
+      {
+        value: this.lambdaFunction.functionName,
+      }
+    );
 
-    this.outputApiGateway = new cdk.CfnOutput(this, `${id}ApiUrl`, {
-      value: httpApi.url!,
-      exportName: `${id}ApiUrlExport`,
-    });
+    this.outputApiGateway = new cdk.CfnOutput(
+      this,
+      `${this.moduleName}ApiUrlOutput`,
+      {
+        value: httpApi.url!,
+        exportName: process.env.API_URL_NAME!,
+      }
+    );
+    console.log("API_URL_NAME: ", process.env.API_URL_NAME);
   }
 }

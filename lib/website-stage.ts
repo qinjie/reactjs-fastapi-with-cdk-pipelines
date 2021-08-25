@@ -17,17 +17,19 @@ export class WebsiteStage extends cdk.Stage {
   constructor(scope: cdk.Construct, id: string, props: WebsiteStageProps) {
     super(scope, id, props);
 
-    const stackBackend = new LambdaApiStack(this, "LambdaApi", {
+    const stackBackend = new LambdaApiStack(this, `${id}Backend`, {
       tags: {
-        Application: "LambdaApi",
+        Application: `${id}Backend`,
         Environment: id,
       },
     });
     this.outputLambda = stackBackend.outputLambda;
     this.outputApiGateway = stackBackend.outputApiGateway;
 
-    // const stack = new ReactjsS3Stack(this, "Reactjs", props);
-    const stackFrontend = new WebsiteCloudfrontStack(this, "Reactjs", props);
+    // const stack = new ReactjsS3Stack(this, `${id}Frontend`, props);
+    const stackFrontend = new WebsiteCloudfrontStack(this, `${id}Frontend`, {
+      ...props,
+    });
     this.outputWebsite = stackFrontend.output;
   }
 }

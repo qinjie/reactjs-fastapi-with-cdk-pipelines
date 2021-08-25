@@ -120,6 +120,9 @@ export class PipelineStack extends cdk.Stack {
     constructId: string,
     runOrder: number
   ): codepipeline_actions.CodeBuildAction {
+    const backendApiUrl = cdk.Fn.importValue(process.env.API_URL_NAME!);
+    console.log("Imported BackendApiUrl: ", backendApiUrl.toString());
+
     return new codepipeline_actions.CodeBuildAction({
       actionName: "Build",
       runOrder: runOrder,
@@ -128,25 +131,31 @@ export class PipelineStack extends cdk.Stack {
       project: new codebuild.PipelineProject(this, constructId, {
         projectName: constructId,
         /* Use buildspec.yml file in src folder */
-        buildSpec: codebuild.BuildSpec.fromSourceFilename(
-          this.frontend_buildspec_file
-        ),
+        // buildSpec: codebuild.BuildSpec.fromSourceFilename(
+        //   this.frontend_buildspec_file
+        // ),
         /* Use code to define buildspec instead of yml file */
-        // buildSpec: codebuild.BuildSpec.fromObject({
-        //   version: "0.2",
-        //   phases: {
-        //     install: {
-        //       commands: ["cd src", "npm install"],
-        //     },
-        //     build: {
-        //       commands: ["npm run build"],
-        //     },
-        //   },
-        //   artifacts: {
-        //     "base-directory": "src/build",
-        //     files: "**/*",
-        //   },
-        // }),
+        buildSpec: codebuild.BuildSpec.fromObject({
+          version: "0.2",
+          phases: {
+            install: {
+              commands: ["cd src_frontend", "npm install"],
+            },
+            build: {
+              commands: ["npm run build"],
+            },
+          },
+          artifacts: {
+            "base-directory": "src_frontend/build",
+            files: ["**/*"],
+          },
+          cache: {
+            paths: ["src_frontend/node_modules/**/*"],
+          },
+          env: {
+            variables: { BACKEND_API_URL: backendApiUrl },
+          },
+        }),
         environment: {
           buildImage: codebuild.LinuxBuildImage.STANDARD_5_0,
           computeType: codebuild.ComputeType.SMALL,
