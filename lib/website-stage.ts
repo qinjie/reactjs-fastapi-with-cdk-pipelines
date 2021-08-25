@@ -1,6 +1,7 @@
 import * as cdk from "@aws-cdk/core";
-import { ReactjsS3Stack } from "./reactjs-s3-stack";
-import { ReactjsCloudfrontStack } from "./reactjs-cloudfront-stack";
+import { ReactjsS3Stack } from "./website-s3-stack";
+import { WebsiteCloudfrontStack } from "./website-cloudfront-stack";
+import { LambdaApiStack } from "./backend-stack";
 
 export interface WebsiteStageProps extends cdk.StageProps {
   domainName: string;
@@ -9,13 +10,24 @@ export interface WebsiteStageProps extends cdk.StageProps {
 }
 
 export class WebsiteStage extends cdk.Stage {
-  public readonly output: cdk.CfnOutput;
+  public readonly outputLambda: cdk.CfnOutput;
+  public readonly outputApiGateway: cdk.CfnOutput;
+  public readonly outputWebsite: cdk.CfnOutput;
 
   constructor(scope: cdk.Construct, id: string, props: WebsiteStageProps) {
     super(scope, id, props);
 
+    const stackBackend = new LambdaApiStack(this, "LambdaApi", {
+      tags: {
+        Application: "LambdaApi",
+        Environment: id,
+      },
+    });
+    this.outputLambda = stackBackend.outputLambda;
+    this.outputApiGateway = stackBackend.outputApiGateway;
+
     // const stack = new ReactjsS3Stack(this, "Reactjs", props);
-    const stack = new ReactjsCloudfrontStack(this, "Reactjs", props);
-    this.output = stack.output;
+    const stackFrontend = new WebsiteCloudfrontStack(this, "Reactjs", props);
+    this.outputWebsite = stackFrontend.output;
   }
 }

@@ -16,7 +16,8 @@ export class PipelineStack extends cdk.Stack {
   readonly repo_branch: string = process.env.REPO_BRANCH!;
   readonly secrets_manager_var: string = process.env.SECRETS_MANAGER_VAR!;
 
-  readonly buildspec_file: string = process.env.BUILDSPEC_FILE!;
+  readonly frontend_buildspec_file: string =
+    process.env.FRONTEND_BUILDSPEC_FILE!;
 
   readonly domainName = process.env.DOMAIN_NAME!;
   readonly hostedZoneName = process.env.HOSTED_ZONE_NAME!;
@@ -55,18 +56,14 @@ export class PipelineStack extends cdk.Stack {
     });
 
     /* Add website stack */
-    const stageDev = this.pipeline.addStage("dev");
-    const websiteStage = new WebsiteStage(
-      this,
-      `${this.moduleName}WebsiteStage`,
-      {
-        domainName: this.domainName,
-        hostedZoneName: this.hostedZoneName,
-        hostedZoneId: this.hostedZoneId,
-        ...props,
-      }
-    );
-    stageDev.addApplication(websiteStage);
+    const stage = this.pipeline.addStage("website");
+    const websiteStage = new WebsiteStage(this, `${this.moduleName}-Website`, {
+      domainName: this.domainName,
+      hostedZoneName: this.hostedZoneName,
+      hostedZoneId: this.hostedZoneId,
+      ...props,
+    });
+    stage.addApplication(websiteStage);
 
     /* Add a stage to build and deploy website */
     const buildDeployStage = this.pipeline.addStage(`build-and-deploy`);
@@ -131,7 +128,9 @@ export class PipelineStack extends cdk.Stack {
       project: new codebuild.PipelineProject(this, constructId, {
         projectName: constructId,
         /* Use buildspec.yml file in src folder */
-        buildSpec: codebuild.BuildSpec.fromSourceFilename(this.buildspec_file),
+        buildSpec: codebuild.BuildSpec.fromSourceFilename(
+          this.frontend_buildspec_file
+        ),
         /* Use code to define buildspec instead of yml file */
         // buildSpec: codebuild.BuildSpec.fromObject({
         //   version: "0.2",

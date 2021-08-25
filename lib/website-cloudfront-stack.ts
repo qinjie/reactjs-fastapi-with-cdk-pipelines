@@ -6,13 +6,13 @@ import * as cert_manager from "@aws-cdk/aws-certificatemanager";
 import * as cloudfront from "@aws-cdk/aws-cloudfront";
 import * as iam from "@aws-cdk/aws-iam";
 
-export interface ReactjsCloudfrontStackProps extends cdk.StackProps {
+export interface WebsiteCloudfrontStackProps extends cdk.StackProps {
   domainName: string;
   hostedZoneName: string;
   hostedZoneId: string;
 }
 
-export class ReactjsCloudfrontStack extends cdk.Stack {
+export class WebsiteCloudfrontStack extends cdk.Stack {
   /*
   Deploy ReactJS project using CloudFront
   */
@@ -21,7 +21,7 @@ export class ReactjsCloudfrontStack extends cdk.Stack {
   constructor(
     scope: cdk.Construct,
     id: string,
-    props: ReactjsCloudfrontStackProps
+    props: WebsiteCloudfrontStackProps
   ) {
     super(scope, id, props);
 

@@ -1,0 +1,7 @@
+nanoid
+fastapi==0.65.1
+orjson==3.5.2
+pydantic[email]==1.8.2
+python-dotenv==0.17.1
+uvicorn[standard]
+mangum==0.11.0

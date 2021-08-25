@@ -2,7 +2,7 @@ import * as cdk from "@aws-cdk/core";
 import * as s3 from "@aws-cdk/aws-s3";
 import * as route53 from "@aws-cdk/aws-route53";
 
-export interface ReactjsS3StackProps extends cdk.StackProps {
+export interface WebsiteS3StackProps extends cdk.StackProps {
   domainName: string;
   hostedZoneName: string;
   hostedZoneId: string;
@@ -14,11 +14,11 @@ export class ReactjsS3Stack extends cdk.Stack {
   */
   output: cdk.CfnOutput;
 
-  constructor(scope: cdk.Construct, id: string, props: ReactjsS3StackProps) {
+  constructor(scope: cdk.Construct, id: string, props: WebsiteS3StackProps) {
     super(scope, id, props);
 
     // Create S3 Bucket
-    const bucket = new s3.Bucket(this, "ReactAppBucket", {
+    const bucket = new s3.Bucket(this, "WebsiteBucket", {
       bucketName: props.domainName,
       publicReadAccess: true,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
